@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "Hot Item", href: "#hot-item" },
-  { name: "Collection", href: "#collection" },
-  { name: "About Us", href: "#about" },
-  { name: "Contact Us", href: "#contact" },
+  { name: "Home", href: "/", type: "page" },
+  { name: "Hot Item", href: "/hot-item", type: "page" },
+  { name: "Collection", href: "/collection", type: "page" },
+  { name: "About Us", href: "#about", type: "section" },
+  { name: "Contact Us", href: "#contact", type: "section" },
 ];
 
 const socialIcons = [
@@ -20,42 +20,38 @@ const socialIcons = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeHash, setActiveHash] = useState("");
 
   useEffect(() => {
-    const handleHashChange = () => {
-      setActiveHash(window.location.hash);
-    };
-
-    handleHashChange();
-
-    window.addEventListener("hashchange", handleHashChange);
-
     const handleScroll = () => {
-      const sections = ["hot-item", "collection", "about", "contact"];
-      const currentSection = sections.find((id) => {
-        const element = document.getElementById(id);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top >= 0 && rect.top <= 200;
-        }
-        return false;
+      const sections = ["about", "contact"];
+      const current = sections.find((id) => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= 120 && rect.bottom >= 120;
       });
 
-      if (currentSection) {
-        setActiveHash(`#${currentSection}`);
-      } else if (window.scrollY < 100) {
-        setActiveHash("");
-      }
+      setActiveHash(current ? `#${current}` : "");
     };
 
-    window.addEventListener("scroll", handleScroll);
+    if (pathname === "/") {
+      window.addEventListener("scroll", handleScroll);
+      handleScroll();
+    }
 
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
+
+  const handleSectionClick = (hash) => {
+    if (pathname !== "/") {
+      router.push(`/${hash}`);
+    } else {
+      const el = document.querySelector(hash);
+      el?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <nav className="fixed z-50 w-full top-0">
@@ -66,12 +62,30 @@ export default function Navbar() {
 
         <div className="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-widest">
           {navLinks.map((link) => {
-            const isHomeActive =
-              link.href === "/" && pathname === "/" && activeHash === "";
-
-            const isHashActive = activeHash === link.href;
-
-            const isActive = isHomeActive || isHashActive;
+            const isActive =
+              link.type === "page"
+                ? pathname === link.href
+                : pathname === "/" && activeHash === link.href;
+            if (link.type === "section") {
+              return (
+                <button
+                  key={link.name}
+                  onClick={() => handleSectionClick(link.href)}
+                  className={`relative pb-1 transition-all duration-300 ${
+                    isActive
+                      ? "text-black font-bold"
+                      : "text-gray-500 hover:text-black"
+                  }`}
+                >
+                  {link.name}
+                  <span
+                    className={`absolute bottom-0 left-0 h-0.5 bg-gray-400 transition-all duration-300 ${
+                      isActive ? "w-full" : "w-0"
+                    }`}
+                  />
+                </button>
+              );
+            }
 
             return (
               <Link
