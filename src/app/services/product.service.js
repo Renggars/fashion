@@ -10,7 +10,16 @@ export const getProducts = async (params = "") => {
   }
 };
 
+export const getProductById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product with ID ${id}:`, error);
+    return null;
+  }
+};
+
 export const getHotItems = async () => {
-  // Spesifik mengambil category 1
   return getProducts("?categoryId=1");
 };

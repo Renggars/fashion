@@ -8,7 +8,7 @@ import { getHotItems, getProducts } from "./services/product.service";
 export default async function Home() {
   const [allData, hotData] = await Promise.all([getProducts(), getHotItems()]);
 
-  const hotItems = hotData.slice(0, 3);
+  const hotItems = allData.slice(0, 3);
   const collection = allData.slice(3, 9);
 
   return (

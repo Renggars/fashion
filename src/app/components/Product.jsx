@@ -2,9 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaAngleRight, FaArrowRight } from "react-icons/fa6";
 
-const phone = "6287797861593";
-
 export default function Product({ title, products = [], isHotItem }) {
+  const phone = "6287797861593";
+  const USD_TO_IDR = 16500;
+
+  const formatIDR = (value) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+
   return (
     <section
       className="py-16 px-6 md:px-16 scroll-mt-20 bg-white"
@@ -33,14 +41,14 @@ export default function Product({ title, products = [], isHotItem }) {
             `Halo Fashion,\n\n` +
               `Saya tertarik dengan produk berikut:\n` +
               `Nama: ${item.title}\n` +
-              `Harga: $${item.price}\n\n` +
+              `Harga: ${formatIDR(item.price * USD_TO_IDR)}\n\n` +
               `Apakah masih tersedia?`
           );
 
           return (
             <div key={item.id || idx} className="group flex flex-col h-full">
               {/* Image Container */}
-              <div className="relative aspect-4/5 overflow-hidden bg-gray-100 rounded-2xl">
+              <div className="relative aspect-6/5 overflow-hidden bg-gray-100 rounded-2xl">
                 {/* Badges */}
                 <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                   {isHotItem && (
@@ -63,12 +71,14 @@ export default function Product({ title, products = [], isHotItem }) {
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
 
-                {/* Overlay on Hover */}
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <button className="bg-white text-black px-6 py-2 rounded-full font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    Quick View
-                  </button>
-                </div>
+                <Link
+                  href={`/product/${item.id}`}
+                  className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                >
+                  <div className="bg-white text-black px-6 py-2 rounded-full font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    View Details
+                  </div>
+                </Link>
               </div>
 
               {/* Product Info */}
@@ -78,7 +88,7 @@ export default function Product({ title, products = [], isHotItem }) {
                     {item.category.name}
                   </p>
                   <span className="text-xl font-bold text-gray-900">
-                    ${item.price.toFixed(2)}
+                    {formatIDR(item.price * USD_TO_IDR)}
                   </span>
                 </div>
 
@@ -90,14 +100,16 @@ export default function Product({ title, products = [], isHotItem }) {
                   {item.description}
                 </p>
 
-                <a
-                  href={`https://wa.me/${phone}?text=${message}`}
-                  target="_blank"
-                  className="mt-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest group-hover:gap-4 transition-all duration-300 text-zinc-900"
-                >
-                  Order via WhatsApp{" "}
-                  <FaArrowRight className="text-orange-500" />
-                </a>
+                <div className="mt-auto pt-6">
+                  <a
+                    href={`https://wa.me/${phone}?text=${message}`}
+                    target="_blank"
+                    className="flex items-center justify-center gap-3 w-full bg-zinc-900 text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-orange-600 hover:shadow-lg transition-all duration-300 group/btn"
+                  >
+                    Order via WhatsApp
+                    <FaArrowRight className="text-orange-500 group-hover/btn:translate-x-1 group-hover/btn:text-white transition-all duration-300" />
+                  </a>
+                </div>
               </div>
             </div>
           );
