@@ -8,8 +8,8 @@ const navLinks = [
   { name: "Home", href: "/", type: "page" },
   { name: "Hot Item", href: "/hot-item", type: "page" },
   { name: "Collection", href: "/collection", type: "page" },
-  { name: "About Us", href: "#about", type: "section" },
-  { name: "Contact Us", href: "#contact", type: "section" },
+  { name: "ABOUT", href: "#about", type: "section" },
+  { name: "CONTACT US", href: "#contact", type: "section" },
 ];
 
 const socialIcons = [
@@ -71,7 +71,7 @@ export default function Navbar() {
                 <button
                   key={link.name}
                   onClick={() => handleSectionClick(link.href)}
-                  className={`relative pb-1 transition-all duration-300 ${
+                  className={`relative pb-1 transition-all duration-300 cursor-pointer ${
                     isActive
                       ? "text-black font-bold"
                       : "text-gray-500 hover:text-black"

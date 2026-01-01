@@ -15,10 +15,9 @@ export default async function CollectionPage() {
       <CollectionHero />
 
       {/* COLLECTION PRODUCT */}
-      <section className="py-16">
+      <section className="pb-16">
         <Product title="Fashion Collection" products={collection} />
       </section>
-
       <a
         href="#"
         className="fixed bottom-6 right-4 bg-[#444] text-white p-3 rounded-full hover:bg-black transition z-50"

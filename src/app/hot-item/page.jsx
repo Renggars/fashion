@@ -2,10 +2,10 @@ import { ChevronUp } from "lucide-react";
 
 import HotItemHero from "../components/HotItemHero";
 import Product from "../components/Product";
-import { getHotItems } from "../services/product.service";
+import { getProducts } from "../services/product.service";
 
 export default async function HotItemPage() {
-  const hotData = await getHotItems();
+  const hotData = await getProducts();
   const hotItems = hotData.slice(0, 3);
 
   return (
@@ -14,8 +14,8 @@ export default async function HotItemPage() {
       <HotItemHero />
 
       {/* HOT ITEM PRODUCT */}
-      <section className="py-16">
-        <Product title="Zeya Hot Item" products={hotItems} isHotItem />
+      <section className="pb-16">
+        <Product title="Fashion Hot Item" products={hotItems} isHotItem />
       </section>
 
       {/* SCROLL TO TOP */}
